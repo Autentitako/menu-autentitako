@@ -2100,4 +2100,1637 @@ Tu ubicación se utiliza para calcular el envío y enviarla al repartidor junto 
 
 <!-- ==================================================
      NOTAS
-=====================================
+================================================== -->
+
+<label>
+
+<b>
+Notas del pedido
+</b>
+
+</label>
+
+
+<textarea
+  id="notas"
+  rows="2"
+  placeholder="Ej. sin cebolla, salsa aparte..."></textarea>
+
+
+
+<!-- ==================================================
+     WHATSAPP
+================================================== -->
+
+<button
+  class="primary"
+  onclick="enviarWhatsApp()">
+
+📲 Enviar pedido completo por WhatsApp
+
+</button>
+
+
+
+<button
+  class="secondary"
+  onclick="vaciarCarrito()">
+
+🗑️ Vaciar carrito
+
+</button>
+
+
+</div>
+
+</main>
+
+</div>
+
+
+
+<!-- ==================================================
+     BOTÓN CARRITO
+================================================== -->
+
+<button
+  id="cartButton"
+  onclick="abrirCarrito()">
+
+🛒 Carrito
+(
+<span id="cartCount">
+0
+</span>
+)
+
+</button>
+
+
+
+<script>
+
+
+/* ==================================================
+   CONFIGURACIÓN
+================================================== */
+
+
+/*
+   Número de WhatsApp de Autentitako
+
+   52 = México
+*/
+
+const WHATSAPP =
+  "528149506908";
+
+
+/*
+   UBICACIÓN DE AUTENTITAKO
+
+   Esta ubicación queda fija.
+
+   Así el sistema NO necesita buscar
+   la ubicación de la taquería.
+
+*/
+
+const TAQUERIA_LAT =
+  25.551744;
+
+const TAQUERIA_LON =
+  -103.326077;
+
+
+
+/* ==================================================
+   VARIABLES
+================================================== */
+
+let carrito = [];
+
+let costoEnvio = 0;
+
+let distanciaKm = null;
+
+let clienteLat = null;
+
+let clienteLon = null;
+
+
+/*
+   Modalidad inicial
+*/
+
+let tipoPedido =
+  "domicilio";
+
+
+
+/* ==================================================
+   AGREGAR PRODUCTO
+================================================== */
+
+function agregarProducto(
+  nombre,
+  precio
+){
+
+  const existente =
+    carrito.find(
+      function(producto){
+
+        return producto.nombre === nombre;
+
+      }
+    );
+
+
+  if(existente){
+
+    existente.cantidad++;
+
+  }else{
+
+    carrito.push({
+
+      nombre:nombre,
+
+      precio:precio,
+
+      cantidad:1
+
+    });
+
+  }
+
+
+  actualizarCarrito();
+
+
+  mostrarCarritoTemporal();
+
+}
+
+
+
+/* ==================================================
+   ANIMACIÓN CARRITO
+================================================== */
+
+function mostrarCarritoTemporal(){
+
+  const boton =
+    document.getElementById(
+      "cartButton"
+    );
+
+
+  boton.style.transform =
+    "scale(1.08)";
+
+
+  setTimeout(
+    function(){
+
+      boton.style.transform =
+        "scale(1)";
+
+    },
+    180
+  );
+
+}
+
+
+
+/* ==================================================
+   QUITAR UNA UNIDAD
+================================================== */
+
+function quitarProducto(index){
+
+  if(
+    carrito[index].cantidad > 1
+  ){
+
+    carrito[index].cantidad--;
+
+  }else{
+
+    carrito.splice(index,1);
+
+  }
+
+
+  actualizarCarrito();
+
+}
+
+
+
+/* ==================================================
+   ELIMINAR PRODUCTO
+================================================== */
+
+function eliminarProducto(index){
+
+  carrito.splice(index,1);
+
+  actualizarCarrito();
+
+}
+
+
+
+/* ==================================================
+   ACTUALIZAR CARRITO
+================================================== */
+
+function actualizarCarrito(){
+
+  const cantidadTotal =
+    carrito.reduce(
+      function(total,producto){
+
+        return total +
+          producto.cantidad;
+
+      },
+      0
+    );
+
+
+  document.getElementById(
+    "cartCount"
+  ).textContent =
+    cantidadTotal;
+
+
+  const caja =
+    document.getElementById(
+      "cartItems"
+    );
+
+
+  if(!carrito.length){
+
+    caja.innerHTML = `
+
+      <div class="empty">
+
+        🛒
+        <b>
+        Tu carrito está vacío.
+        </b>
+
+        <br><br>
+
+        Regresa al menú y agrega tus productos.
+
+      </div>
+
+    `;
+
+
+    document.getElementById(
+      "subtotal"
+    ).textContent =
+      "0";
+
+
+    return;
+
+  }
+
+
+  let subtotal = 0;
+
+  let html = "";
+
+
+  carrito.forEach(
+    function(producto,index){
+
+      const totalProducto =
+        producto.precio *
+        producto.cantidad;
+
+
+      subtotal +=
+        totalProducto;
+
+
+      html += `
+
+        <div class="card">
+
+          <div class="row">
+
+            <div>
+
+              <div class="name">
+
+                ${escapar(
+                  producto.nombre
+                )}
+
+              </div>
+
+
+              <div class="small">
+
+                $${producto.precio}
+
+                ×
+
+                ${producto.cantidad}
+
+                =
+
+                <b>
+                $${totalProducto}
+                </b>
+
+              </div>
+
+            </div>
+
+
+            <div
+              style="
+              display:flex;
+              gap:5px;
+              ">
+
+
+              <button
+                class="removeButton"
+                onclick="quitarProducto(${index})">
+
+                −
+
+              </button>
+
+
+              <button
+                class="removeButton"
+                onclick="eliminarProducto(${index})">
+
+                🗑️
+
+              </button>
+
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+  );
+
+
+  caja.innerHTML =
+    html;
+
+
+  document.getElementById(
+    "subtotal"
+  ).textContent =
+    subtotal;
+
+}
+
+
+
+/* ==================================================
+   ESCAPAR TEXTO
+================================================== */
+
+function escapar(texto){
+
+  return texto.replace(
+    /[&<>"']/g,
+    function(caracter){
+
+      const mapa = {
+
+        "&":"&amp;",
+
+        "<":"&lt;",
+
+        ">":"&gt;",
+
+        '"':"&quot;",
+
+        "'":"&#039;"
+
+      };
+
+
+      return mapa[caracter];
+
+    }
+  );
+
+}
+
+
+
+/* ==================================================
+   ABRIR CARRITO
+================================================== */
+
+function abrirCarrito(){
+
+  document.getElementById(
+    "menuPage"
+  ).classList.remove(
+    "active"
+  );
+
+
+  document.getElementById(
+    "cartPage"
+  ).classList.add(
+    "active"
+  );
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+
+  actualizarCarrito();
+
+}
+
+
+
+/* ==================================================
+   VOLVER AL MENÚ
+================================================== */
+
+function volverAlMenu(){
+
+  document.getElementById(
+    "cartPage"
+  ).classList.remove(
+    "active"
+  );
+
+
+  document.getElementById(
+    "menuPage"
+  ).classList.add(
+    "active"
+  );
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+
+/* ==================================================
+   SUBTOTAL
+================================================== */
+
+function obtenerSubtotal(){
+
+  return carrito.reduce(
+    function(total,producto){
+
+      return total +
+        producto.precio *
+        producto.cantidad;
+
+    },
+    0
+  );
+
+}
+
+
+
+/* ==================================================
+   SELECCIONAR MODALIDAD
+================================================== */
+
+function seleccionarTipoPedido(
+  tipo
+){
+
+  tipoPedido =
+    tipo;
+
+
+  const btnDomicilio =
+    document.getElementById(
+      "btnDomicilio"
+    );
+
+  const btnRecoger =
+    document.getElementById(
+      "btnRecoger"
+    );
+
+  const btnComerAqui =
+    document.getElementById(
+      "btnComerAqui"
+    );
+
+
+  const datosDomicilio =
+    document.getElementById(
+      "datosDomicilio"
+    );
+
+
+  const resumen =
+    document.getElementById(
+      "modalidadSeleccionada"
+    );
+
+
+  /*
+     Quitar selección
+  */
+
+  btnDomicilio.classList.remove(
+    "activo"
+  );
+
+  btnRecoger.classList.remove(
+    "activo"
+  );
+
+  btnComerAqui.classList.remove(
+    "activo"
+  );
+
+
+  /*
+     DOMICILIO
+  */
+
+  if(tipo === "domicilio"){
+
+    btnDomicilio.classList.add(
+      "activo"
+    );
+
+
+    datosDomicilio.style.display =
+      "block";
+
+
+    resumen.innerHTML =
+      "🚚 Pedido a domicilio";
+
+
+    /*
+       Si ya existe ubicación,
+       la conservamos.
+    */
+
+    return;
+
+  }
+
+
+  /*
+     RECOGER
+  */
+
+  if(tipo === "recoger"){
+
+    btnRecoger.classList.add(
+      "activo"
+    );
+
+
+    datosDomicilio.style.display =
+      "none";
+
+
+    resumen.innerHTML =
+      "🏪 Pasaré a recoger mi pedido en sucursal";
+
+
+    /*
+       No necesitamos GPS
+    */
+
+    return;
+
+  }
+
+
+  /*
+     COMER AHÍ
+  */
+
+  if(tipo === "comer"){
+
+    btnComerAqui.classList.add(
+      "activo"
+    );
+
+
+    datosDomicilio.style.display =
+      "none";
+
+
+    resumen.innerHTML =
+      "🍽️ Comeré mi pedido en sucursal";
+
+
+    /*
+       No necesitamos GPS
+    */
+
+    return;
+
+  }
+
+}
+
+
+
+/* ==================================================
+   DISTANCIA
+================================================== */
+
+function calcularDistancia(
+  lat1,
+  lon1,
+  lat2,
+  lon2
+){
+
+  const R =
+    6371;
+
+
+  const dLat =
+    (lat2-lat1) *
+    Math.PI /
+    180;
+
+
+  const dLon =
+    (lon2-lon1) *
+    Math.PI /
+    180;
+
+
+  const a =
+
+    Math.sin(
+      dLat/2
+    ) *
+    Math.sin(
+      dLat/2
+    )
+
+    +
+
+    Math.cos(
+      lat1 *
+      Math.PI /
+      180
+    )
+
+    *
+
+    Math.cos(
+      lat2 *
+      Math.PI /
+      180
+    )
+
+    *
+
+    Math.sin(
+      dLon/2
+    ) *
+    Math.sin(
+      dLon/2
+    );
+
+
+  const c =
+    2 *
+    Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1-a)
+    );
+
+
+  return R*c;
+
+}
+
+
+
+/* ==================================================
+   TARIFA DE ENVÍO
+================================================== */
+
+function tarifaEnvio(km){
+
+  if(km <= 3){
+
+    return 30;
+
+  }
+
+
+  if(km <= 6){
+
+    return 45;
+
+  }
+
+
+  if(km <= 10){
+
+    return 60;
+
+  }
+
+
+  if(km <= 15){
+
+    return 95;
+
+  }
+
+
+  if(km <= 20){
+
+    return 105;
+
+  }
+
+
+  return null;
+
+}
+
+
+
+/* ==================================================
+   OBTENER GPS DEL CLIENTE
+================================================== */
+
+function obtenerUbicacion(){
+
+  /*
+     Solo se puede usar para domicilio.
+  */
+
+  if(
+    tipoPedido !==
+    "domicilio"
+  ){
+
+    return;
+
+  }
+
+
+  const estado =
+    document.getElementById(
+      "ubicacionEstado"
+    );
+
+
+  const resultado =
+    document.getElementById(
+      "envioResultado"
+    );
+
+
+  estado.className =
+    "warn";
+
+
+  estado.innerHTML =
+
+    "📍 <b>Obteniendo ubicación...</b><br>" +
+
+    "Por favor acepta el permiso de ubicación.";
+
+
+  resultado.innerHTML =
+    "";
+
+
+  if(
+    !navigator.geolocation
+  ){
+
+    estado.innerHTML =
+      "⚠️ Este navegador no permite obtener la ubicación.";
+
+    return;
+
+  }
+
+
+  navigator.geolocation.getCurrentPosition(
+
+    function(position){
+
+
+      /*
+         GPS DEL CLIENTE
+      */
+
+      clienteLat =
+        position.coords.latitude;
+
+
+      clienteLon =
+        position.coords.longitude;
+
+
+      /*
+         DISTANCIA
+      */
+
+      distanciaKm =
+        calcularDistancia(
+
+          TAQUERIA_LAT,
+
+          TAQUERIA_LON,
+
+          clienteLat,
+
+          clienteLon
+
+        );
+
+
+      /*
+         COSTO
+      */
+
+      costoEnvio =
+        tarifaEnvio(
+          distanciaKm
+        );
+
+
+      /*
+         GOOGLE MAPS
+      */
+
+      const mapa =
+
+        "https://www.google.com/maps?q=" +
+
+        clienteLat +
+
+        "," +
+
+        clienteLon;
+
+
+      estado.className =
+        "ok";
+
+
+      estado.innerHTML =
+
+        "✅ <b>Ubicación obtenida correctamente.</b><br>" +
+
+        "Tu ubicación se incluirá en el pedido.";
+
+
+      /*
+         MÁS DE 20 KM
+      */
+
+      if(
+        costoEnvio === null
+      ){
+
+        resultado.innerHTML = `
+
+          <div class="warn">
+
+            📏 Distancia aproximada:
+
+            <b>
+            ${distanciaKm.toFixed(1)} km
+            </b>
+
+            <br><br>
+
+            ⚠️ La distancia supera
+            los 20 km.
+
+            <br><br>
+
+            El costo de envío deberá confirmarse por WhatsApp.
+
+
+            <a
+              class="mapLink"
+              href="${mapa}"
+              target="_blank">
+
+              🗺️ Ver mi ubicación en Google Maps
+
+            </a>
+
+          </div>
+
+        `;
+
+      }
+
+
+      /*
+         HASTA 20 KM
+      */
+
+      else{
+
+        resultado.innerHTML = `
+
+          <div class="locationBox">
+
+            📍 <b>Ubicación lista</b>
+
+            <br><br>
+
+            📏 Distancia aproximada:
+
+            <b>
+            ${distanciaKm.toFixed(1)} km
+            </b>
+
+            <br><br>
+
+            🚚 Costo de envío:
+
+            <b>
+            $${costoEnvio}
+            </b>
+
+
+            <a
+              class="mapLink"
+              href="${mapa}"
+              target="_blank">
+
+              🗺️ Ver mi ubicación en Google Maps
+
+            </a>
+
+          </div>
+
+        `;
+
+      }
+
+    },
+
+
+    function(error){
+
+      estado.className =
+        "warn";
+
+
+      if(
+        error.code === 1
+      ){
+
+        estado.innerHTML =
+
+          "⚠️ No se permitió el acceso a la ubicación. " +
+
+          "Activa el permiso de ubicación del navegador.";
+
+      }
+
+
+      else if(
+        error.code === 2
+      ){
+
+        estado.innerHTML =
+
+          "⚠️ No fue posible determinar tu ubicación. " +
+
+          "Intenta nuevamente.";
+
+      }
+
+
+      else if(
+        error.code === 3
+      ){
+
+        estado.innerHTML =
+
+          "⚠️ La ubicación tardó demasiado. " +
+
+          "Intenta nuevamente.";
+
+      }
+
+
+      else{
+
+        estado.innerHTML =
+
+          "⚠️ No se pudo obtener tu ubicación.";
+
+      }
+
+    },
+
+
+    {
+
+      enableHighAccuracy:true,
+
+      timeout:15000,
+
+      maximumAge:60000
+
+    }
+
+  );
+
+}
+
+
+
+/* ==================================================
+   ENVIAR WHATSAPP
+================================================== */
+
+function enviarWhatsApp(){
+
+  /*
+     VERIFICAR CARRITO
+  */
+
+  if(
+    !carrito.length
+  ){
+
+    alert(
+      "Agrega al menos un producto al carrito."
+    );
+
+    return;
+
+  }
+
+
+  /*
+     DATOS
+  */
+
+  const nombre =
+    document.getElementById(
+      "nombre"
+    ).value.trim();
+
+
+  const direccion =
+    document.getElementById(
+      "direccion"
+    ).value.trim();
+
+
+  const notas =
+    document.getElementById(
+      "notas"
+    ).value.trim();
+
+
+  /*
+     NOMBRE OBLIGATORIO
+  */
+
+  if(!nombre){
+
+    alert(
+      "Escribe tu nombre."
+    );
+
+    return;
+
+  }
+
+
+  /*
+     DIRECCIÓN SOLO PARA DOMICILIO
+  */
+
+  if(
+    tipoPedido ===
+    "domicilio"
+    &&
+    !direccion
+  ){
+
+    alert(
+      "Escribe la dirección de entrega."
+    );
+
+    return;
+
+  }
+
+
+  /*
+     GPS SOLO PARA DOMICILIO
+  */
+
+  if(
+    tipoPedido ===
+    "domicilio"
+    &&
+    (
+      clienteLat === null ||
+      clienteLon === null
+    )
+  ){
+
+    const continuar =
+      confirm(
+
+        "No has compartido tu ubicación GPS. " +
+
+        "¿Quieres enviar el pedido sin ubicación?"
+
+      );
+
+
+    if(!continuar){
+
+      return;
+
+    }
+
+  }
+
+
+  /*
+     SUBTOTAL
+  */
+
+  const subtotal =
+    obtenerSubtotal();
+
+
+  /*
+     MODALIDAD
+  */
+
+  let modalidad = "";
+
+
+  if(
+    tipoPedido ===
+    "domicilio"
+  ){
+
+    modalidad =
+      "🚚 ENTREGA A DOMICILIO";
+
+  }
+
+
+  if(
+    tipoPedido ===
+    "recoger"
+  ){
+
+    modalidad =
+      "🏪 PASARÉ A RECOGER EN SUCURSAL";
+
+  }
+
+
+  if(
+    tipoPedido ===
+    "comer"
+  ){
+
+    modalidad =
+      "🍽️ COMERÉ EN LA SUCURSAL";
+
+  }
+
+
+  /*
+     MENSAJE
+  */
+
+  let mensaje =
+
+`🌮 *PEDIDO AUTENTITAKO*
+
+📦 *MODALIDAD:*
+${modalidad}
+
+👤 *CLIENTE:*
+${nombre}
+`;
+
+
+  /*
+     DIRECCIÓN SOLO DOMICILIO
+  */
+
+  if(
+    tipoPedido ===
+    "domicilio"
+  ){
+
+    mensaje +=
+
+`
+📍 *DIRECCIÓN DE ENTREGA:*
+${direccion}
+`;
+
+  }
+
+
+  /*
+     PRODUCTOS
+  */
+
+  mensaje +=
+
+`
+🛒 *PEDIDO:*
+`;
+
+
+  carrito.forEach(
+    function(producto){
+
+      mensaje +=
+
+`• ${producto.nombre} x${producto.cantidad} = $${producto.precio * producto.cantidad}
+`;
+
+    }
+  );
+
+
+  /*
+     SUBTOTAL
+  */
+
+  mensaje +=
+
+`
+💵 *SUBTOTAL:*
+$${subtotal}
+`;
+
+
+
+  /* ==================================================
+     DOMICILIO
+  ================================================== */
+
+  if(
+    tipoPedido ===
+    "domicilio"
+  ){
+
+    /*
+       GPS
+    */
+
+    if(
+      clienteLat !== null &&
+      clienteLon !== null
+    ){
+
+      const mapa =
+
+        "https://www.google.com/maps?q=" +
+
+        clienteLat +
+
+        "," +
+
+        clienteLon;
+
+
+      mensaje +=
+
+`
+📍 *UBICACIÓN GPS DEL CLIENTE:*
+
+Latitud:
+${clienteLat}
+
+Longitud:
+${clienteLon}
+
+🗺️ *GOOGLE MAPS:*
+${mapa}
+`;
+
+    }else{
+
+      mensaje +=
+
+`
+📍 *UBICACIÓN GPS:*
+No compartida.
+`;
+
+    }
+
+
+    /*
+       ENVÍO
+    */
+
+    if(
+      costoEnvio !== null &&
+      costoEnvio > 0 &&
+      distanciaKm !== null
+    ){
+
+      mensaje +=
+
+`
+📏 *DISTANCIA APROXIMADA:*
+${distanciaKm.toFixed(1)} km
+
+🚚 *COSTO DE ENVÍO:*
+$${costoEnvio}
+
+💰 *TOTAL:*
+$${subtotal + costoEnvio}
+`;
+
+    }
+
+    else{
+
+      mensaje +=
+
+`
+🚚 *COSTO DE ENVÍO:*
+Por confirmar
+
+💰 *TOTAL SIN ENVÍO:*
+$${subtotal}
+`;
+
+    }
+
+  }
+
+
+
+  /* ==================================================
+     RECOGER
+  ================================================== */
+
+  if(
+    tipoPedido ===
+    "recoger"
+  ){
+
+    mensaje +=
+
+`
+🏪 *ENTREGA:*
+El cliente pasará a recoger su pedido en sucursal.
+
+🚚 *COSTO DE ENVÍO:*
+$0
+
+💰 *TOTAL:*
+$${subtotal}
+`;
+
+  }
+
+
+
+  /* ==================================================
+     COMER AHÍ
+  ================================================== */
+
+  if(
+    tipoPedido ===
+    "comer"
+  ){
+
+    mensaje +=
+
+`
+🍽️ *SERVICIO:*
+El cliente comerá en la sucursal.
+
+🚚 *COSTO DE ENVÍO:*
+$0
+
+💰 *TOTAL:*
+$${subtotal}
+`;
+
+  }
+
+
+
+  /*
+     NOTAS
+  */
+
+  if(notas){
+
+    mensaje +=
+
+`
+📝 *NOTAS:*
+${notas}
+`;
+
+  }
+
+
+  /*
+     FINAL
+  */
+
+  mensaje +=
+
+`
+🔥 ¡Gracias por tu pedido!
+
+🌮 AUTENTITAKO
+`;
+
+
+
+  /*
+     WHATSAPP
+  */
+
+  const url =
+
+    "https://wa.me/" +
+
+    WHATSAPP +
+
+    "?text=" +
+
+    encodeURIComponent(
+      mensaje
+    );
+
+
+  window.location.href =
+    url;
+
+}
+
+
+
+/* ==================================================
+   VACIAR CARRITO
+================================================== */
+
+function vaciarCarrito(){
+
+  if(
+    !carrito.length
+  ){
+
+    return;
+
+  }
+
+
+  const confirmar =
+    confirm(
+      "¿Seguro que quieres vaciar el carrito?"
+    );
+
+
+  if(!confirmar){
+
+    return;
+
+  }
+
+
+  carrito = [];
+
+
+  costoEnvio = 0;
+
+
+  distanciaKm = null;
+
+
+  clienteLat = null;
+
+
+  clienteLon = null;
+
+
+  tipoPedido =
+    "domicilio";
+
+
+  /*
+     Limpiar resultado GPS
+  */
+
+  document.getElementById(
+    "envioResultado"
+  ).innerHTML =
+    "";
+
+
+  document.getElementById(
+    "ubicacionEstado"
+  ).className =
+    "small";
+
+
+  document.getElementById(
+    "ubicacionEstado"
+  ).textContent =
+
+    "Tu ubicación se utiliza para calcular el envío y enviarla al repartidor junto con el pedido.";
+
+
+  /*
+     Regresar modalidad a domicilio
+  */
+
+  seleccionarTipoPedido(
+    "domicilio"
+  );
+
+
+  /*
+     Actualizar
+  */
+
+  actualizarCarrito();
+
+}
+
+
+
+/* ==================================================
+   INICIO
+================================================== */
+
+actualizarCarrito();
+
+
+/*
+   Asegurar que domicilio
+   esté seleccionado al abrir.
+*/
+
+seleccionarTipoPedido(
+  "domicilio"
+);
+
+
+</script>
+
+
+</body>
+
+</html>
