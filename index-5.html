@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#8b1e1e">
+<title>Autentitako | Menú y pedidos</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#fff7df;color:#333}header{background:#8b1e1e;color:#fff;text-align:center;padding:18px 12px;position:sticky;top:0;z-index:20}.logo{font-size:30px;font-weight:900}header p{margin:6px 0 0;font-size:14px}main{max-width:760px;margin:auto;padding:12px}.hero{background:#ffd447;border-radius:16px;padding:18px;text-align:center;margin-bottom:14px}.hero h1{margin:0;font-size:26px}.hero p{margin:8px 0 0}nav{display:flex;gap:8px;overflow-x:auto;padding:8px 0 14px;position:sticky;top:82px;background:#fff7df;z-index:10}nav a{background:#8b1e1e;color:#fff;text-decoration:none;padding:10px 14px;border-radius:20px;white-space:nowrap;font-weight:bold}section{margin:22px 0}section h2{background:#8b1e1e;color:#fff;border-radius:12px;padding:10px 14px;font-size:21px}.card{background:#fff;border-radius:14px;margin:9px 0;padding:13px;box-shadow:0 2px 8px #0001}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.name{font-weight:800;font-size:17px}.desc{font-size:13px;color:#666;margin-top:4px}.price{font-weight:900;color:#b51f1f;font-size:19px;white-space:nowrap}button{border:0;border-radius:10px;padding:10px 13px;font-weight:bold;font-size:15px;cursor:pointer}.add{background:#8b1e1e;color:white}.qty{background:#eee;padding:5px 9px}#cart{position:fixed;right:15px;bottom:15px;z-index:30;background:#8b1e1e;color:#fff;border-radius:50px;padding:14px 18px;box-shadow:0 4px 15px #0004}.panel{background:#fff;border-radius:16px;padding:15px;margin-top:15px;box-shadow:0 2px 10px #0002}input,textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;font-size:16px;margin:6px 0 12px}.primary{background:#198754;color:#fff;width:100%;padding:13px}.secondary{background:#eee;width:100%;margin-top:8px}.total{font-size:20px;font-weight:900;margin:12px 0}.ok{background:#e7f7ed;border:1px solid #9bd3ad;padding:10px;border-radius:10px}.warn{background:#fff3cd;border:1px solid #e2c45c;padding:10px;border-radius:10px}.small{font-size:13px;color:#666}footer{text-align:center;padding:25px 10px 90px;background:#8b1e1e;color:white;margin-top:25px}
+</style>
+</head>
+<body>
+<header><div class="logo">🌮 AUTENTITAKO</div><p>Av. Universidad #894, Joyas del Bosque</p><p>Pedidos: <b>871 136 4991</b></p></header>
+<main>
+<div class="hero"><h1>🔥 ¡Haz tu pedido!</h1><p>Agrega tus productos al carrito y envía tu pedido completo por WhatsApp.</p></div>
+<nav><a href="#trompo">🌮 Pastor</a><a href="#bistec">🥩 Bistec</a><a href="#hamburguesas">🍔 Hamburguesas</a><a href="#bebidas">🥤 Bebidas</a><a href="#especiales">⭐ Especiales</a><a href="#pedido">🛒 Pedido</a></nav>
+<section id="trompo"><h2>🌮 Carne de Pastor o Trompo</h2>
+<div class="card"><div class="row"><div class="name">Orden c/4 tacos</div><div class="price">$75</div><button class="add" onclick="add('Orden c/4 tacos de pastor',75)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Taco 1 pieza</div><div class="price">$25</div><button class="add" onclick="add('Taco de pastor',25)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Promoción c/12 tacos</div><div class="price">$150</div><button class="add" onclick="add('Promoción 12 tacos de pastor',150)">Agregar</button></div></div>
+<div class="card"><div class="row"><div><div class="name">Kilo de carne de trompo</div><div class="desc">Incluye tortillas, salsas, verdura y limones</div></div><div class="price">$450</div><button class="add" onclick="add('Kilo de carne de trompo',450)">Agregar</button></div></div>
+<div class="card"><div class="row"><div><div class="name">1/2 kilo de carne de trompo</div><div class="desc">Incluye tortillas, salsas, verdura y limones</div></div><div class="price">$260</div><button class="add" onclick="add('1/2 kilo de carne de trompo',260)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Tortillón de trompo</div><div class="price">$120</div><button class="add" onclick="add('Tortillón de trompo',120)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Orden de gringas c/3</div><div class="price">$120</div><button class="add" onclick="add('Orden de gringas de trompo c/3',120)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Gringa 1 pieza</div><div class="price">$45</div><button class="add" onclick="add('Gringa de trompo 1 pieza',45)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Alambre de trompo</div><div class="price">$125</div><button class="add" onclick="add('Alambre de trompo',125)">Agregar</button></div></div>
+<div class="card"><div class="row"><div><div class="name">1/2 platillo de alambre de trompo</div><div class="desc">Incluye tortillas, salsas y limones</div></div><div class="price">$160</div><button class="add" onclick="add('1/2 platillo de alambre de trompo',160)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Papas especiales con pastor</div><div class="price">$75</div><button class="add" onclick="add('Papas especiales con pastor',75)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Papas especiales con boneless</div><div class="price">$85</div><button class="add" onclick="add('Papas especiales con boneless',85)">Agregar</button></div></div>
+</section>
+<section id="bistec"><h2>🥩 Bistec de Res</h2>
+<div class="card"><div class="row"><div class="name">Orden c/4 tacos</div><div class="price">$95</div><button class="add" onclick="add('Orden c/4 tacos de bistec',95)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Taco 1 pieza</div><div class="price">$25</div><button class="add" onclick="add('Taco de bistec',25)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Tortillón de bistec</div><div class="price">$135</div><button class="add" onclick="add('Tortillón de bistec',135)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Gringas de bistec c/3</div><div class="price">$135</div><button class="add" onclick="add('Gringas de bistec c/3',135)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Gringa 1 pieza</div><div class="price">$50</div><button class="add" onclick="add('Gringa de bistec 1 pieza',50)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Platillo que me vez</div><div class="price">$260</div><button class="add" onclick="add('Platillo que me vez',260)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Platillo de alambre</div><div class="price">$260</div><button class="add" onclick="add('Platillo de alambre',260)">Agregar</button></div></div>
+</section>
+<section id="hamburguesas"><h2>🍔 Hamburguesas</h2>
+<div class="card"><div class="row"><div><div class="name">Hamburguesa Especial</div><div class="desc">Carne de hamburguesa, jamón, queso, salchicha para asar y carne de trompo</div></div><div class="price">$95</div><button class="add" onclick="add('Hamburguesa Especial',95)">Agregar</button></div></div>
+<div class="card"><div class="row"><div><div class="name">Salchiburger</div><div class="desc">Carne de hamburguesa, jamón, queso y salchicha para asar</div></div><div class="price">$80</div><button class="add" onclick="add('Salchiburger',80)">Agregar</button></div></div>
+<div class="card"><div class="row"><div><div class="name">Torta Burger</div><div class="desc">Carne de trompo, jamón y queso</div></div><div class="price">$75</div><button class="add" onclick="add('Torta Burger',75)">Agregar</button></div></div>
+<div class="card"><div class="row"><div><div class="name">Hamburguesa Sencilla</div><div class="desc">Carne de hamburguesa, jamón y queso</div></div><div class="price">$70</div><button class="add" onclick="add('Hamburguesa Sencilla',70)">Agregar</button></div></div>
+</section>
+<section id="bebidas"><h2>🥤 Bebidas</h2>
+<div class="card"><div class="row"><div class="name">Agua de Jamaica 1 litro</div><div class="price">$35</div><button class="add" onclick="add('Agua de Jamaica 1 litro',35)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Agua de Limón 1 litro</div><div class="price">$35</div><button class="add" onclick="add('Agua de Limón 1 litro',35)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Agua de Horchata 1 litro</div><div class="price">$35</div><button class="add" onclick="add('Agua de Horchata 1 litro',35)">Agregar</button></div></div>
+<div class="card"><div class="row"><div class="name">Refresco</div><div class="price">$35</div><button class="add" onclick="add('Refresco',35)">Agregar</button></div></div>
+</section>
+<section id="especiales"><h2>⭐ Especiales</h2>
+<div class="card"><div class="row"><div><div class="name">Papas especiales con pastor</div><div class="desc">Papas preparadas con carne de pastor</div></div><div class="price">$75</div><button class="add" onclick="add('Papas especiales con pastor',75)">Agregar</button></div></div>
+<div class="card"><div class="row"><div><div class="name">Papas especiales con boneless</div><div class="desc">Papas preparadas con boneless</div></div><div class="price">$85</div><button class="add" onclick="add('Papas especiales con boneless',85)">Agregar</button></div></div>
+</section>
+<section id="pedido" class="panel"><h2>🛒 Mi pedido</h2><div id="cartItems">Tu carrito está vacío.</div><div class="total">Subtotal: $<span id="subtotal">0.00</span></div>
+<div id="resumenDescuentos" class="small">Agrega productos para ver promociones disponibles.</div>
+<div class="total">Descuentos: −$<span id="descuentoTotal">0.00</span><br>Total de productos: $<span id="totalProductos">0.00</span></div>
+<label><b>Nombre</b></label><input id="nombre" type="text" placeholder="Tu nombre" autocomplete="name">
+<label><b>Teléfono del cliente</b></label><input id="telefonoCliente" type="tel" inputmode="tel" placeholder="Número desde el que haces tu pedido" autocomplete="tel">
+<label><b>¿Cómo recibirás tu pedido?</b></label><select id="tipoPedido" onchange="cambiarTipoPedido()" style="width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;font-size:16px;margin:6px 0 12px"><option value="domicilio">🚚 A domicilio</option><option value="recoger">🛍️ Pasaré a recoger</option><option value="comer">🍽️ Comer aquí</option></select>
+<div id="datosDomicilio">
+<label><b>Dirección de entrega</b></label><textarea id="direccion" rows="3" placeholder="Calle, número, colonia y referencias"></textarea>
+<button class="primary" id="btnCalcularEnvio" onclick="calcularEnvio()">📍 Calcular costo de envío con mi ubicación</button>
+</div>
+<p id="ubicacionEstado" class="small">Origen fijo: Autentitako — 25.551744, -103.326077.</p><div id="envioResultado"></div>
+<label><b>Notas del pedido</b></label><textarea id="notas" rows="2" placeholder="Ej. sin cebolla, salsa aparte..."></textarea>
+<button class="primary" onclick="enviarWhatsApp()">📲 Enviar pedido completo por WhatsApp</button><button class="secondary" onclick="vaciarCarrito()">🗑️ Vaciar carrito</button></section>
+</main>
+<button id="cart" onclick="document.getElementById('pedido').scrollIntoView({behavior:'smooth'})">🛒 Carrito <span id="cartCount">0</span></button>
+<footer><b>AUTENTITAKO</b><br>Av. Universidad #894, Joyas del Bosque<br>Pedidos: 871 136 4991</footer>
+<script>
+const WHATSAPP="528711364991", TAQUERIA_LAT=25.551744, TAQUERIA_LON=-103.326077;
+let carrito=[],costoEnvio=0,distanciaKm=null;
+function add(nombre,precio){let p=carrito.find(x=>x.nombre===nombre);p?p.cantidad++:carrito.push({nombre,precio,cantidad:1});renderCart()}
+function quitar(i){carrito[i].cantidad>1?carrito[i].cantidad--:carrito.splice(i,1);renderCart()}
+function esc(t){return t.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function subtotal(){return carrito.reduce((s,p)=>s+p.precio*p.cantidad,0)}
+function calcularDescuentos(){
+  const sub=subtotal();
+  const tienePapas=carrito.some(p=>p.nombre.toLowerCase().includes('papas'));
+  const tieneAgua=carrito.some(p=>p.nombre.toLowerCase().includes('agua de'));
+  const descuentoCombo=(tienePapas&&tieneAgua)?sub*0.05:0;
+  const tipo=document.getElementById('tipoPedido')?.value||'domicilio';
+  const base=Math.max(0,sub-descuentoCombo);
+  const descuentoModalidad=(tipo==='recoger'||tipo==='comer')?base*0.03:0;
+  return {sub,descuentoCombo,descuentoModalidad,totalDescuentos:descuentoCombo+descuentoModalidad,totalProductos:Math.max(0,sub-descuentoCombo-descuentoModalidad),tienePapas,tieneAgua,tipo};
+}
+function renderCart(){
+  const b=document.getElementById('cartItems'),n=carrito.reduce((s,p)=>s+p.cantidad,0),sub=subtotal();
+  document.getElementById('cartCount').textContent=n;
+  if(!carrito.length){b.textContent='Tu carrito está vacío.';document.getElementById('subtotal').textContent='0.00';document.getElementById('resumenDescuentos').textContent='Agrega productos para ver promociones disponibles.';document.getElementById('descuentoTotal').textContent='0.00';document.getElementById('totalProductos').textContent='0.00';return}
+  b.innerHTML=carrito.map((p,i)=>{let t=p.precio*p.cantidad;return `<div class="card"><div class="row"><div><b>${esc(p.nombre)}</b><br><span class="small">$${p.precio.toFixed(2)} c/u × ${p.cantidad} = $${t.toFixed(2)}</span></div><button class="qty" onclick="quitar(${i})">−</button></div></div>`}).join('');
+  const d=calcularDescuentos();
+  document.getElementById('subtotal').textContent=d.sub.toFixed(2);
+  document.getElementById('descuentoTotal').textContent=d.totalDescuentos.toFixed(2);
+  document.getElementById('totalProductos').textContent=d.totalProductos.toFixed(2);
+  let promos=[];
+  if(d.tienePapas&&d.tieneAgua)promos.push('🎉 5% de descuento por agregar papas y agua fresca.');
+  else promos.push('💡 Agrega papas y agua fresca para obtener 5% de descuento.');
+  if(d.tipo==='recoger'||d.tipo==='comer')promos.push('⭐ 3% adicional por '+(d.tipo==='recoger'?'recoger tu pedido':'comer aquí')+'.');
+  document.getElementById('resumenDescuentos').textContent=promos.join(' ');
+}
+function cambiarTipoPedido(){
+  const tipo=document.getElementById('tipoPedido').value;
+  const domicilio=tipo==='domicilio';
+  document.getElementById('datosDomicilio').style.display=domicilio?'block':'none';
+  if(!domicilio){costoEnvio=0;distanciaKm=null;document.getElementById('envioResultado').innerHTML='';document.getElementById('ubicacionEstado').textContent='No se requiere envío para esta modalidad.';document.getElementById('ubicacionEstado').className='small'}
+  else{document.getElementById('ubicacionEstado').textContent='Origen fijo: Autentitako — 25.551744, -103.326077.';document.getElementById('ubicacionEstado').className='small'}
+  renderCart();
+}
+function dist(a,b,c,d){const R=6371,x=(c-a)*Math.PI/180,y=(d-b)*Math.PI/180,q=Math.sin(x/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(y/2)**2;return R*2*Math.atan2(Math.sqrt(q),Math.sqrt(1-q))}
+function tarifa(k){if(k<=3)return 25;if(k<=6)return 40;if(k<=10)return 55;if(k<=15)return 80;if(k<=20)return 95;return null}
+function calcularEnvio(){
+  if(document.getElementById('tipoPedido').value!=='domicilio')return;
+  const s=document.getElementById('ubicacionEstado'),r=document.getElementById('envioResultado');costoEnvio=0;distanciaKm=null;s.className='warn';s.textContent='📍 Buscando tu ubicación...';
+  if(!navigator.geolocation){s.textContent='⚠️ Este navegador no permite obtener ubicación.';return}
+  let done=false,timer=setTimeout(()=>{if(done)return;done=true;s.textContent='⚠️ No se obtuvo tu ubicación en 10 segundos. Activa el permiso de ubicación y vuelve a intentarlo.'},10000);
+  navigator.geolocation.getCurrentPosition(p=>{if(done)return;done=true;clearTimeout(timer);distanciaKm=dist(TAQUERIA_LAT,TAQUERIA_LON,p.coords.latitude,p.coords.longitude);let f=tarifa(distanciaKm);s.className=f===null?'warn':'ok';s.textContent=`📍 Distancia aproximada: ${distanciaKm.toFixed(1)} km desde Autentitako.`;if(f===null){r.innerHTML='<div class="warn"><b>El domicilio está a más de 20 km.</b><br>Confirma el servicio por WhatsApp.</div>'}else{costoEnvio=f;r.innerHTML=`<div class="ok">🚚 <b>Costo de envío: $${f}</b><br>Distancia aproximada: ${distanciaKm.toFixed(1)} km</div>`}},e=>{if(done)return;done=true;clearTimeout(timer);let m=e.code===1?'⚠️ Permiso de ubicación denegado. Actívalo para este sitio y vuelve a intentarlo.':e.code===2?'⚠️ No fue posible determinar tu ubicación. Intenta nuevamente.':'⚠️ La búsqueda tardó demasiado. Intenta nuevamente.';s.className='warn';s.textContent=m},{enableHighAccuracy:true,timeout:8000,maximumAge:60000});
+}
+function contarPedidosLocal(telefono){
+  // Contador local de respaldo. Para compartir el historial entre dispositivos se necesita un servidor/base de datos.
+  const clave='autentitako_pedidos_'+telefono.replace(/\D/g,'');
+  let cuenta=Number(localStorage.getItem(clave)||'0')+1;
+  localStorage.setItem(clave,String(cuenta));
+  return cuenta;
+}
+function enviarWhatsApp(){
+  if(!carrito.length)return alert('Agrega al menos un producto al carrito.');
+  const n=document.getElementById('nombre').value.trim(),tel=document.getElementById('telefonoCliente').value.trim(),tipo=document.getElementById('tipoPedido').value,d=document.getElementById('direccion').value.trim(),not=document.getElementById('notas').value.trim();
+  if(!n)return alert('Escribe tu nombre.');
+  if(!tel)return alert('Escribe el número telefónico desde el que haces tu pedido.');
+  if(tipo==='domicilio'&&!d)return alert('Escribe tu dirección de entrega.');
+  if(tipo==='domicilio'&&distanciaKm===null)return alert('Primero calcula tu ubicación y el costo de envío. Si no puedes compartir ubicación, confirma el envío por WhatsApp antes de enviar el pedido.');
+  const calc=calcularDescuentos();
+  let numeroPedido=0,envioGratis=false;
+  if(tipo==='domicilio'){
+    numeroPedido=contarPedidosLocal(tel);
+    envioGratis=numeroPedido%3===0;
+  }
+  const envioFinal=(tipo==='domicilio'?(envioGratis?0:costoEnvio):0);
+  let m=`🌮 *PEDIDO AUTENTITAKO*\n\n👤 *Nombre:* ${n}\n📱 *Teléfono:* ${tel}\n📦 *Modalidad:* ${tipo==='domicilio'?'A domicilio':tipo==='recoger'?'Pasaré a recoger':'Comer aquí'}\n`;
+  if(tipo==='domicilio')m+=`📍 *Dirección:* ${d}\n`;
+  m+='\n🛒 *PRODUCTOS:*\n';
+  carrito.forEach(p=>m+=`• ${p.nombre} x${p.cantidad} = $${(p.precio*p.cantidad).toFixed(2)}\n`);
+  m+=`\n💵 *Subtotal:* $${calc.sub.toFixed(2)}\n`;
+  if(calc.descuentoCombo>0)m+=`🎉 *Descuento 5% papas + agua fresca:* −$${calc.descuentoCombo.toFixed(2)}\n`;
+  if(calc.descuentoModalidad>0)m+=`⭐ *Descuento 3% por ${tipo==='recoger'?'recoger':'comer aquí'}:* −$${calc.descuentoModalidad.toFixed(2)}\n`;
+  m+=`💸 *Total descuentos:* −$${calc.totalDescuentos.toFixed(2)}\n💰 *Total productos con descuentos:* $${calc.totalProductos.toFixed(2)}\n`;
+  if(tipo==='domicilio'){
+    if(envioGratis)m+=`🎁 *ENVÍO GRATIS:* Este pedido corresponde al pedido #${numeroPedido} registrado en este dispositivo.\n`;
+    else if(distanciaKm!==null&&costoEnvio>0)m+=`🚚 *Envío:* $${costoEnvio.toFixed(2)}\n📏 *Distancia aprox.:* ${distanciaKm.toFixed(1)} km\n`;
+    else m+='🚚 *Envío:* Por confirmar\n';
+    m+=`💰 *TOTAL A PAGAR:* $${(calc.totalProductos+envioFinal).toFixed(2)}\n`;
+  }else m+=`💰 *TOTAL A PAGAR:* $${calc.totalProductos.toFixed(2)}\n`;
+  if(not)m+=`\n📝 *Notas:* ${not}\n`;
+  m+='\n¡Gracias por tu pedido! 🌮🔥';
+  location.href=`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(m)}`;
+}
+function vaciarCarrito(){carrito=[];costoEnvio=0;distanciaKm=null;document.getElementById('envioResultado').innerHTML='';document.getElementById('ubicacionEstado').className='small';document.getElementById('ubicacionEstado').textContent='Origen fijo: Autentitako — 25.551744, -103.326077.';renderCart()}
+renderCart();
+</script></body></html>
